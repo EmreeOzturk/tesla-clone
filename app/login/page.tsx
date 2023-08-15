@@ -1,16 +1,40 @@
 import Link from "next/link";
+import { FormEvent } from "react";
+import { signIn } from "next-auth/react";
 const LoginPage = () => {
+  const handleLogin = (data: FormData) => {
+    const email = data.get("email");
+    const password = data.get("password");
+
+    console.log(email);
+    console.log(password);
+
+    signIn("credentials", {
+      email: email as string,
+      password: password as string,
+      redirect: false,
+    });
+  };
+
   return (
     <div className="h-screen  pt-36 flex flex-col items-center justify-start">
       <div className="space-y-8 w-1/4">
         <div className="text-4xl font-bold">Sign In</div>
-        <form className="flex flex-col space-y-4">
+        <form action={handleLogin} className="flex flex-col space-y-4">
           <div className="flex flex-col space-y-2">
             <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
               autoComplete="off"
+              className="focus:outline-none focus:border focus:border-slate-300  border border-white bg-[#f4f4f4] rounded-md p-2"
+            />
+          </div>
+          <div className="flex flex-col space-y-2">
+            <label htmlFor="email">Password</label>
+            <input
+              type="password"
+              id="password"
               className="focus:outline-none focus:border focus:border-slate-300  border border-white bg-[#f4f4f4] rounded-md p-2"
             />
           </div>
@@ -30,7 +54,10 @@ const LoginPage = () => {
           <div className="h-[1px] flex-1 bg-slate-600 opacity-50"></div>
         </div>
         <div className="w-full ">
-          <Link href="/register" className="bg-[#f4f4f4] text-center hover:bg-[#eee] block min-w-full py-2 font-bold rounded-md text-slate-500">
+          <Link
+            href="/register"
+            className="bg-[#f4f4f4] text-center hover:bg-[#eee] block min-w-full py-2 font-bold rounded-md text-slate-500"
+          >
             Create Account
           </Link>
         </div>

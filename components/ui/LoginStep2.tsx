@@ -76,7 +76,18 @@ const LoginStep2: React.FC<Props> = ({ account, setAccount, setStep }) => {
               account.password === ""
             }
             className={`disabled:bg-[#9eb4f0] bg-[#5880ee]  w-full py-2 font-bold rounded-md text-slate-200`}
-            onClick={() => setStep(2)}
+            onClick={async () => {
+              const response = await fetch("/api/register", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(account),
+              })
+                .then((res) => res.json())
+                .then(() => alert("Account Created"))
+                .catch(() => alert("Error Creating Account"));
+            }}
           >
             Create Account
           </button>
