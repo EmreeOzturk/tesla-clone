@@ -5,6 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
 export const authOptions: NextAuthOptions = {
@@ -15,6 +16,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "../../../login",
   },
+  secret: process.env.NEXTAUTH_SECRET!,
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
@@ -35,18 +37,22 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const res = await fetch("/your/endpoint", {
-          method: "POST",
-          body: JSON.stringify(credentials),
-          headers: { "Content-Type": "application/json" },
+        console.log("sasasasasa");
+        console.log("CredentialsProvider", credentials);
+        const user = await prisma.user.findUnique({
+          where: { email: credentials?.email },
         });
-        const user = await res.json();
-        // If no error and we have user data, return it
-        if (res.ok && user) {
-          return user;
-        }
-        // Return null if user data could not be retrieved
-        return null;
+        // if (user && user.hashedPassword) {
+        //   const isValid = bcrypt.compare(
+        //     credentials?.password,
+        //     user.hashedPassword
+        //   );
+        //   if (isValid) {
+        //     console.log("CredentialsProvider", user);
+        //     return user;
+        //   }
+        // }
+        return user;
       },
     }),
   ],

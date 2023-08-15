@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-
+import { useRouter } from "next/navigation";
 type Props = {
   account: {
     firstName: string;
@@ -18,6 +18,7 @@ type Props = {
 };
 
 const LoginStep2: React.FC<Props> = ({ account, setAccount, setStep }) => {
+  const router = useRouter();
   return (
     <div className="h-screen  pt-36 flex flex-col items-center justify-start">
       <div className="space-y-8 w-1/4">
@@ -83,10 +84,16 @@ const LoginStep2: React.FC<Props> = ({ account, setAccount, setStep }) => {
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify(account),
-              })
-                .then((res) => res.json())
-                .then(() => alert("Account Created"))
-                .catch(() => alert("Error Creating Account"));
+              });
+              if (response.ok) {
+                const data = response.json();
+                console.log(data);
+                alert("Account created successfully");
+                router.push("/login");
+              } else {
+                console.log(response /*  */);
+                alert("Something went wrong");
+              }
             }}
           >
             Create Account

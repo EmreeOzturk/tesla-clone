@@ -23,7 +23,7 @@ const Header = () => {
             >
               <Link
                 href={{
-                  pathname: item?.href,
+                  pathname: item?.href || "/",
                 }}
               >
                 <Icon icon={item.icon} className="h-[1.25rem] w-[1.25rem]" />
